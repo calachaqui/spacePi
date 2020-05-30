@@ -1,0 +1,31 @@
+##things to do
+  take video
+    streamed and recorded
+  log data
+    altitude
+    temperature
+    pressure
+  geolocate
+    gps
+  send small data
+    short radio wave
+##things to buy
+  power bank
+  MPL3115A2 Altimeter
+  stratux GPYes U-blox 8
+  LoRa transeiver
+     Adafruit RFM95W LoRa Radio Transceiver Breakout - 868 or 915 MHz - RadioFruit
+##things to assemble
+  usb GPS
+    https://www.u-blox.com/sites/default/files/products/documents/u-blox8-M8_ReceiverDescrProtSpec_%28UBX-13003221%29.pdf
+  wires for altimeter
+    complete use
+    -http://www.pibits.net/code/raspberry-pi-and-mpl3115a2-pressure-sensor.php
+  wires for LoRa
+    https://learn.adafruit.com/lora-and-lorawan-radio-for-raspberry-pi/overview
+    https://circuitdigest.com/microcontroller-projects/raspberry-pi-with-lora-peer-to-peer-communication-with-arduino
+
+##python packages to message ublox
+http://github.com.Korving-F/ublox
+http://github.com.mayeranalytics/pyUBX
+
