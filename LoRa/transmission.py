@@ -1,10 +1,10 @@
-#/usr/bin/python3
-"""
-sending data with LoRa and python
-File Name: transmission.py
-help guide: https://learn.adafruit.com/lora-and-lorawan-radio-for-raspberry-pi/sending-data-using-a-lora-radio
-Author: Jacob Wood
-"""
+#!/usr/bin/python3
+
+#sending data with LoRa and python
+#File Name: transmission.py
+#help guide: https://learn.adafruit.com/lora-and-lorawan-radio-for-raspberry-pi/sending-data-using-a-lora-radio
+#Author: Jacob Wood
+
 # Import Python System Libraries
 import time,datetime
 # Import Blinka Libraries
@@ -24,12 +24,11 @@ rfm9x.tx_power = 23
 prev_packet = None
 
 #Sending a packet
+message = input('type message here: ')
 print('preparing first packet')
-tim.sleep(1)
 #preparing data
 tmstp = datetime.datetime.now()
-first_data = bytes('hello Radio World %s' % tmstp,'utf-8')
+first_data = bytes('Hello Radio World, %s %s' % (message,tmstp),'utf-8')
 print('sending first packet...')
 rfm9x.send(first_data)
-time.sleep(.50)
 print('first packet sent')
