@@ -1,18 +1,19 @@
+#!/usr/bin/python3
 # Distributed with a free-will license.
 # Use it any way you want, profit or free, provided it fits in the licenses of its associated works.
 # MPL3115A2
 # This code is designed to work with the MPL3115A2_I2CS I2C Mini Module available from ControlEverything.com.
 # https://shop.controleverything.com/products/precision-altimeter-500-to-1100-mbar#tabs-0-product_tabset-2
- 
+
 import smbus
 import time
- 
+
 # Get I2C bus
 bus = smbus.SMBus(1)
- 
+
 # I2C address of the device
 MPL3115A2_DEFAULT_ADDRESS			= 0x60
- 
+
 # MPL3115A2 Regster Map
 MPL3115A2_REG_STATUS				= 0x00 # Sensor status Register
 MPL3115A2_REG_PRESSURE_MSB			= 0x01 # Pressure data out MSB
@@ -56,62 +57,60 @@ MPL3115A2_CTRL_REG1_ALT				= 0x80 # Part is in altimeter mod
 MPL3115A2_CTRL_REG1_BAR				= 0x00 # Part is in barometer mode
  
 class MPL3115A2():
-	def control_alt_config(self):
-		"""Select the Control Register-1 Configuration from the given provided value"""
-		CONTROL_CONFIG = (MPL3115A2_CTRL_REG1_SBYB | MPL3115A2_CTRL_REG1_OS128 | MPL3115A2_CTRL_REG1_ALT)
-		bus.write_byte_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_CTRL_REG1, CONTROL_CONFIG)
- 
-	def data_config(self):
-		"""Select the PT Data Configuration Register from the given provided value"""
-		DATA_CONFIG = (MPL3115A2_PT_DATA_CFG_TDEFE | MPL3115A2_PT_DATA_CFG_PDEFE | MPL3115A2_PT_DATA_CFG_DREM)
-		bus.write_byte_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_PT_DATA_CFG, DATA_CONFIG)
- 
-	def read_alt_temp(self):
-		"""Read data back from MPL3115A2_REG_STATUS(0x00), 6 bytes
-		status, tHeight MSB, tHeight CSB, tHeight LSB, temp MSB, temp LSB"""
-		data = bus.read_i2c_block_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_REG_STATUS, 6)
- 
-		# Convert the data to 20-bits
-		tHeight = ((data[1] * 65536) + (data[2] * 256) + (data[3] & 0xF0)) / 16
-		temp = ((data[4] * 256) + (data[5] & 0xF0)) / 16
- 
-		altitude = tHeight / 16.0
-		cTemp = temp / 16.0
-		fTemp = cTemp * 1.8 + 32
- 
-		return {'a' : altitude, 'c' : cTemp, 'f' : fTemp}
- 
-	def control_pres_config(self):
-		"""Select the Control Register-1 Configuration from the given provided value"""
-		CONTROL_CONFIG = (MPL3115A2_CTRL_REG1_SBYB | MPL3115A2_CTRL_REG1_OS128)
-		bus.write_byte_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_CTRL_REG1, CONTROL_CONFIG)
- 
-	def read_pres(self):
-		"""Read data back from MPL3115A2_REG_STATUS(0x00), 4 bytes
-		status, pres MSB, pres CSB, pres LSB"""
-		data = bus.read_i2c_block_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_REG_STATUS, 4)
- 
-		# Convert the data to 20-bits
-		pres = ((data[1] * 65536) + (data[2] * 256) + (data[3] & 0xF0)) / 16
-		pressure = (pres / 4.0) / 1000.0
- 
-		return {'p' : pressure}
-""" 
-from MPL3115A2 import MPL3115A2
-mpl3115a2 = MPL3115A2()
- 
-while True :
-	mpl3115a2.control_alt_config()
-	mpl3115a2.data_config()
-	time.sleep(1)
-	alt = mpl3115a2.read_alt_temp()
-	print "Altitude : %.2f m"%(alt['a'])
-	print "Temperature in Celsius : %.2f C"%(alt['c'])
-	print "Temperature in Fahrenheit : %.2f F"%(alt['f'])
-	mpl3115a2.control_pres_config()
-	time.sleep(1)
-	pres = mpl3115a2.read_pres()
-	print "Pressure : %.2f kPa"%(pres['p'])
-	print " ************************************* "
-"""
-"""
+  def control_alt_config(self):
+    """Select the Control Register-1 Configuration from the given provided value"""
+    CONTROL_CONFIG = (MPL3115A2_CTRL_REG1_SBYB | MPL3115A2_CTRL_REG1_OS128 | MPL3115A2_CTRL_REG1_ALT)
+    bus.write_byte_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_CTRL_REG1, CONTROL_CONFIG)
+
+  def data_config(self):
+    """Select the PT Data Configuration Register from the given provided value"""
+    DATA_CONFIG = (MPL3115A2_PT_DATA_CFG_TDEFE | MPL3115A2_PT_DATA_CFG_PDEFE | MPL3115A2_PT_DATA_CFG_DREM)
+    bus.write_byte_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_PT_DATA_CFG, DATA_CONFIG)
+
+  def read_alt_temp(self):
+    """Read data back from MPL3115A2_REG_STATUS(0x00), 6 bytes
+    status, tHeight MSB, tHeight CSB, tHeight LSB, temp MSB, temp LSB"""
+    data = bus.read_i2c_block_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_REG_STATUS, 6)
+
+    # Convert the data to 20-bits
+    tHeight = ((data[1] * 65536) + (data[2] * 256) + (data[3] & 0xF0)) / 16
+    temp = ((data[4] * 256) + (data[5] & 0xF0)) / 16
+
+    altitude = tHeight / 16.0
+    cTemp = temp / 16.0
+    fTemp = cTemp * 1.8 + 32
+
+    return {'a' : altitude, 'c' : cTemp, 'f' : fTemp}
+
+  def control_pres_config(self):
+    """Select the Control Register-1 Configuration from the given provided value"""
+    CONTROL_CONFIG = (MPL3115A2_CTRL_REG1_SBYB | MPL3115A2_CTRL_REG1_OS128)
+    bus.write_byte_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_CTRL_REG1, CONTROL_CONFIG)
+
+  def read_pres(self):
+    """Read data back from MPL3115A2_REG_STATUS(0x00), 4 bytes
+    status, pres MSB, pres CSB, pres LSB"""
+    data = bus.read_i2c_block_data(MPL3115A2_DEFAULT_ADDRESS, MPL3115A2_REG_STATUS, 4)
+
+    # Convert the data to 20-bits
+    pres = ((data[1] * 65536) + (data[2] * 256) + (data[3] & 0xF0)) / 16
+    pressure = (pres / 4.0) / 1000.0
+
+    return {'p' : pressure}
+
+if __name__ == "__main__":
+  #quick data print
+  mpl3115a2 = MPL3115A2()
+  mpl3115a2.control_alt_config()
+  mpl3115a2.data_config()
+  time.sleep(1)
+  alt = mpl3115a2.read_alt_temp()
+  alt_ft = alt['a'] * 3.281
+  print( "Altitude in Feet : %.2f"%(alt_ft))
+  print( "Temperature in Celsius : %.2f C"%(alt['c']))
+  print( "Temperature in Fahrenheit : %.2f F"%(alt['f']))
+  mpl3115a2.control_pres_config()
+  time.sleep(1)
+  pres = mpl3115a2.read_pres()
+  print( "Pressure : %.2f kPa"%(pres['p']))
+  print( " ************************************* ")
