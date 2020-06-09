@@ -1,0 +1,6 @@
+##* * * * * sudo timeout 1 cat /dev/ttyACM0|grep --line-buffered GLL>>/home/slice/GPS_output.txt
+
+#enter the following in crontab
+@reboot cat /dev/ttyACM0 | grep GLL > /home/slice/GPS_output.txt
+#how to end the command
+
