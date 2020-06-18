@@ -35,8 +35,7 @@ while True:
     #print recieved packet
     print('Receiving Packet...')
     time.sleep(.5)
-    packet_text = str(prev_packet, "utf-8")
+    packet_text = str(packet, "utf-8")
     print('Received packet: ',packet_text)
     with open('file_name.txt','w') as log:
       log.write(packet_text)
-   
