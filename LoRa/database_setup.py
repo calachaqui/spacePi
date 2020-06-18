@@ -7,6 +7,7 @@ c = conn.cursor()
 
 sql_cmd = """CREATE TABLE outgoing_message (
 q_timestamp datetime,
+msg_type CHAR(12),
 sender_id VARCHAR(24),
 message CHAR(255),
 send_status CHAR(12),
@@ -18,6 +19,7 @@ c.execute(sql_cmd)
 
 sql_cmd = """CREATE TABLE incoming_message (
 msg_timestamp datetime,
+msg_type CHAR(12),
 sender_id VARCHAR(24),
 message CHAR(255),
 exec_status CHAR(12),
@@ -35,7 +37,7 @@ gps_coord CHAR(50),
 PRIMARY KEY (rcd_timestamp)
 )"""
 
-c.execute(sql_cmd)
+#c.execute(sql_cmd)
 
 conn.commit()
 print("database and tables are created")
