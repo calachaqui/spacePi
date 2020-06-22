@@ -2,6 +2,6 @@
 message type
 sender id
 ##package for data
-alititude,tempurature,timestamp
+alititude,tempurature,gps_c,timestamp
 ##package for command
 username,command_name,timestamp
