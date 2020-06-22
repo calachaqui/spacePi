@@ -29,7 +29,7 @@ PRIMARY KEY (msg_timestamp)
 
 c.execute(sql_cmd)
 
-sql_cmd = """CREATE TABLE rocket_data (
+sql_cmd = """CREATE TABLE telemetry_data (
 rcd_timestamp datetime,
 altitude FLOAT,
 temp FLOAT,
