@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # sqlite3
-.db
+*.db
