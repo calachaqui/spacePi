@@ -1,3 +1,50 @@
+# pyUBX - simpler docs
+
+These documents are easier to get started for not-smart people like me. The initial documentation is below.
+
+### Installation
+
+You can install this with pip!
+
+~~~
+pip install git+https://github.com/williamflynt/pyUBX.git
+~~~
+
+### Requirements
+
+I don't have any great requirements, because I only tested this for my use case. I used: 
+
+- Python 3.6
+- USB receiver by DIYMall using U-blox 7 (Amazon, $15)
+
+### Device Setup
+
+On my device, I can print the GPS module's output directly. It creates a device called `ttyACM0`.
+
+~~~
+sudo cat /dev/ttyACM0
+~~~
+
+That give me lots of junk messages. I just want satellites and coordinates. I also don't want to have to run scripts
+as superuser. So we will stop it from printing junk and make it accessible to non-superusers. There is probably a good
+reason not to do this, but I'm doing it.
+
+~~~
+sudo chmod 666 /dev/ttyACM0
+stty -F /dev/ttyACM0 -echo
+~~~
+
+Now we can read and write to the device. Of note, the `stty` command isn't needed for this package, just to view directly in the terminal.
+
+### Show Me Coordinates
+
+1. Do the steps above. If you don't know your device name (`/dev/ttyXYZ0`), find it somehow and put it on line 216 of `UBX.py`.
+Alternatively, you can call the next command with the `port` argument.
+2. Open a terminal to project root. `python UBX.py --NMEA | grep GPGLL` or `python UBX.py --port /dev/ttyACA0 --NMEA` 
+to see all messages from your device. Note that I included a device location with the `--port` argument.
+
+---
+
 # pyUBX
 
 This is a small but functional Python3 wrapper for the u-blox M8 UBX protocol, as
@@ -212,7 +259,7 @@ The decorator `@_InitType` does most of the work: It implements the `__init__`, 
 
 ### `UBX.py`
 
-`UBX.py` is a utlilty that allows to send UBX commands to the device. For example, to switch into power save mode and then start dumping NMEA messages, run
+`UBX.py` is a utlilty that allows to send UBX commands to the device. For example, to switch into power save mode and then start umping NMEA messages, run
 
 ```bash
 ./UBX.py --RXM 1 --NMEA
@@ -281,9 +328,9 @@ The Python shell (or even better: [IPython](https://ipython.org/)) provides a [R
 
 #### SBCs
 
-For field tests single board computers (SBCs) can be used. Some draw less than 200mA, so a 5Ah USB power bank is more than enough for a day's work. A default choice is the ubiquitous Rasperry Pi. The community is huge and libraries are plentiful. But with only one each of UART, SPI, I<sup>2</sup>C it's not necessarliy the best choice for prototyping. Some popular alternatives are
+For field tests single board computers (SBCs) can be used. Some draw less than 200mA, so a 5Ah USB power bank is more than enough for a day's work. A default choice is the ubiquitous Rasperry Pi. The community is huge and libraries are plentiful. But with only one each of UART, SPI, I<sup>2</sup>C it's not necessarliy the best choice for prototyping. Some alternatives are
 
-- ~~**[C.H.I.P](http://getchip.com)**: Very cheap, with on-board flash, and with slightly more I/O than the Raspberry~~ NextThing Co. [went bust](https://web.archive.org/web/20180918191618/https://bbs.nextthing.co/t/reports-about-insolvency-true/20439/18) in March 2018
+- **[C.H.I.P](http://getchip.com)**: Very cheap, with on-board flash, and with slightly more I/O than the Raspberry
 - **[Beaglebone Black](https://beagleboard.org/black)**: Well equipped with on-board flash, 2 x SPI, 2 x I<sup>2</sup>C, 4 x UART, etc., but not so cheap (around 50$).
 - **[Pine64](https://www.pine64.org)**: Rather large and power hungry (300-800mA current draw), but cheap yet powerful with an Allwinner R18 quad-core A64 processor and [generous I/O](https://drive.google.com/file/d/0B0cEs0lxTtL3YU1CNmJ2bEIzTlE/view).
 - [**UDOO Neo**](https://www.udoo.org/docs-neo/Introduction/Introduction.html): i.MX 6SoloX-based with 3 x UART, 3 x I<sup>2</sup>C, but only 1 x SPI. The basic version is about 50$.

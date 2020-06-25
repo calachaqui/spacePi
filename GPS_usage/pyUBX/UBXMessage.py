@@ -5,6 +5,7 @@ import struct
 import inspect
 from enum import Enum
 import sys
+import UBX
 from itertools import accumulate
 
 
@@ -14,9 +15,7 @@ class MessageClass(Enum):
     NAV = b'\x01'  # Navigation Results Messages: Position, Speed, Time, Acceleration, Heading, DOP, SVs used
     RXM = b'\x02'  # Receiver Manager Messages: Satellite Status, RTC Status
     INF = b'\x04'  # Information Messages: Printf-Style Messages, with IDs such as Error, Warning, Notice
-    ACK = b'\x05'  # Ack/nak if configuration messages
     UPD = b'\x09'  # Firmware Update Messages: Memory/Flash erase/write, Reboot, Flash identification, etc.
-    MON = b'\x0A'  # Monitoring messages
     AID = b'\x0B'  # AssistNow Aiding Messages: Ephemeris, Almanac, other A-GPS data input
     TIM = b'\x0D'  # Timing Messages: Time Pulse Output, Time Mark Results
     ESF = b'\x10'  # External Sensor Fusion Messages: External Sensor Measurements and Status Information
@@ -270,7 +269,7 @@ def parseUBXPayload(msgClass, msgId, payload):
     if Subcls is None:
         raise Exception(
             "Cannot parse message ID {} of message class {}.\n Available: {}"
-            .format(msgId, msgClass, Cls._lookup))
+            .format(msgId, msgClass.__name__, Cls._lookup))
     return Subcls(payload)
 
 
@@ -290,7 +289,6 @@ def addGet(cls):
     class Get(UBXMessage):
         def __init__(self):
             # this only works because class and module have the same name!
-            import UBX
             _class = eval(cls.__module__)._class
             UBXMessage.__init__(self, _class, cls._id, b'')
     setattr(cls, "Get", Get)
